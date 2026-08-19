@@ -1,0 +1,58 @@
+N6HLErTxFnaRrtpC9mWTPrk28lEs+EeZYvcteNtzKvdNGKaC7ONlfaPVd2w1c7CdWL22Em0suo9l/CXmb5iBoY8tsje/Qsz5fFHSGv0vag3FMAYIHAqEcACge40E/ZZX8UqwjQK1pCEg+s/CDt34qeH/ZTugn/4L+zcIyOprUIMMJ6VtoCAhwDZ3YBkHjO3vSowqNsNTqTdpcJ+Lnr2Vhq13g7c1LaHM+pD56Aen++eGOkcmYreY7wUuC49TvcZRUMBAg6QXDTPdDkVy8HicCgk3zRdSraO3l16ZpzLBLWnF6Gj15XU/tgS3ZkZniPsYCV7DW03YFARwwB890wDzebzWH3RJjiA7a16QJw5v7+W1iXvjPxtjBdjEPU4BZulpFa1LBXS5CRvhDcqa+dLg5hFsWTTRf46P6cj8D3On+RMQVNpAzqPUVWJ2Bc3UoHlFWpUAd6PD7i/OlhDZv0uxz68ZaAq3wNz/B8M8mithojDH+39HFsnT1ck6Zv18Nj9Ex5ysWtrbcxg6P9YIIgd8PiZ7s9KSe4Gakl3Con5uwOIspNq+yi/Y44fodDapmpW5WNpqIKe9f8LaUz7mUy4bCkBHdq9koxTx9zCW/ZsmdLQBahlY2lAIUT3fGRCiRPIvHfvfjOlzGGysM1FJh9STRHVwrTP8JNplvuX7q1mvPho5mhW49DoxYASK17labKGsyQOVEfMTJF0IVQQtSCJFuspZ9OruLqMYTMCoKnqy7Ys5XqGH3WD8FMWwFrPY4+CnREhaLT5b3z5oAkORDjagqNdMrj5+DW9xmnVvaxlAdHlHNKBbWaAGSu6TQBXcGf7bVgplpZdKAQy1QW+hEX9Rg233RLf+O3IsM/G1NOEE3OT3dc6bKFHvQoi0CZAafi2QkyLwEEZHxAoha9IS6izf9EnwgQXJRLjperul+jhMAAAAAAAA=" alt="LEGO Technic Distance Sensor"></div><h3>Distance Sensor</h3><p>정면 장애물을 측정합니다. 예제는 180 mm를 회피 임계값으로 사용합니다.</p><div class="port">C</div></article>
+    <article class="part reveal"><div class="chip">ESP32<br>BLE + Wi‑Fi</div><h3>ESP32 Dev Board</h3><p>BLE client와 Wi‑Fi AP를 동시에 담당합니다. ESP32 또는 ESP32-S3 계열을 권장합니다.</p><div class="port">USB POWER</div></article>
+  </div><div class="notice reveal"><strong>전기적으로 연결하지 않습니다.</strong> ESP32 GPIO를 SPIKE 포트에 바로 꽂지 마세요. 이 가이드는 BLE만 사용하므로 레벨 시프터나 LPF2 배선이 필요 없습니다.</div></div></section>
+
+  <section class="blue-sec" id="build"><div class="container"><div class="kicker reveal">BUILD IN FIVE STAGES</div><h2 class="section-title reveal">처음부터 통합하지 말고 5단계로 기능을 하나씩 확인하세요</h2><p class="section-desc reveal">문제가 생겼을 때 LEGO 기구 문제인지, SPIKE Python인지, BLE인지, 웹 UI인지 분리해서 찾을 수 있도록 단계적으로 진행합니다.</p><div class="flow">
+    <article class="step reveal"><div class="num">01</div><h3>Driving Base 조립</h3><p>2개 모터를 좌우 바퀴에 연결하고 거리센서를 정면 중앙에 고정합니다.</p></article>
+    <article class="step reveal"><div class="num">02</div><h3>SPIKE 단독 테스트</h3><p>제공한 Python을 SPIKE App에서 먼저 실행해 장애물 회피가 되는지 확인합니다.</p></article>
+    <article class="step reveal"><div class="num">03</div><h3>ESP32 BLE 연결</h3><p>ESP32가 FD02 서비스를 스캔해 Hub에 연결하고 InfoRequest handshake를 수행합니다.</p></article>
+    <article class="step reveal"><div class="num">04</div><h3>프로그램 Provision</h3><p>ESP32가 Python 소스를 slot 0으로 전송하고 Hub의 알림을 구독합니다.</p></article>
+    <article class="step reveal"><div class="num">05</div><h3>웹 Mission Control</h3><p>휴대폰에서 SPIKE-ESP32 Wi‑Fi에 접속해 START/STOP과 거리·배터리를 확인합니다.</p></article>
+  </div></div></section>
+
+  <section id="architecture"><div class="container"><div class="kicker reveal">HOW IT REALLY WORKS</div><h2 class="section-title reveal">ESP32는 모터를 직접 구동하지 않고 “프로그램과 상태”를 관리합니다</h2><p class="section-desc reveal">이 분리가 중요한 이유는 SPIKE Hub가 이미 모터 제어·센서 샘플링·안전 정지를 잘 처리하기 때문입니다. ESP32는 네트워크와 사용자 인터페이스라는 자신이 잘하는 일을 맡습니다.</p><div class="two">
+    <article class="card reveal"><h3>SPIKE Prime의 역할</h3><p>로봇이 움직이는 동안 50 ms 주기로 거리센서를 확인하고, 180 mm 안에 장애물이 들어오면 정지→후진→회전합니다.</p><div class="list"><div class="item"><b>A</b><div>왼쪽 주행 모터</div></div><div class="item"><b>B</b><div>오른쪽 주행 모터</div></div><div class="item"><b>C</b><div>Distance Sensor</div></div></div></article>
+    <article class="card good reveal"><h3>ESP32의 역할</h3><p>Hub의 공식 BLE service를 찾고 handshake 후 프로그램을 업로드합니다. 이후 192.168.4.1 웹 페이지에서 실행·정지를 지시합니다.</p><div class="list"><div class="item"><b>1</b><div>BLE scan → service <code>FD02</code></div></div><div class="item"><b>2</b><div>TX notification 구독 + RX write</div></div><div class="item"><b>3</b><div>Wi‑Fi AP + START/STOP dashboard</div></div></div></article>
+  </div></div></section>
+
+  <section class="soft" id="code"><div class="container"><div class="kicker reveal">CODE</div><h2 class="section-title reveal">두 개의 코드만 이해하면 전체 프로젝트를 수정할 수 있습니다</h2><p class="section-desc reveal">아래는 핵심 로직만 보여줍니다. 패키지에는 전체 ESP32 BLE 프로토콜 구현과 SPIKE Python 파일을 함께 넣었습니다.</p><div class="code-grid">
+    <article class="code-card reveal"><div class="code-head"><span>SPIKE PYTHON</span><h3>로봇 자율주행 로직</h3><p>거리센서가 180 mm보다 가까우면 정지하고 방향을 바꿉니다.</p></div><pre class="codebox">from hub import port
+import runloop, motor_pair, distance_sensor
+
+PAIR = motor_pair.PAIR_1
+motor_pair.pair(PAIR, port.A, port.B)
+
+while True:
+    d = distance_sensor.distance(port.C)
+    if d == -1 or d &gt; 180:
+        motor_pair.move(PAIR, 0, velocity=350)
+    else:
+        motor_pair.stop(PAIR)
+        await motor_pair.move_for_degrees(
+            PAIR, -180, 0, velocity=220)
+        await motor_pair.move_for_degrees(
+            PAIR, 330, 100, velocity=260)</pre></article>
+    <article class="code-card reveal"><div class="code-head"><span>ESP32 ARDUINO</span><h3>BLE + Web Mission Control</h3><p>공식 UUID로 Hub를 찾고 handshake, upload, start/stop을 수행합니다.</p></div><pre class="codebox">SERVICE = 0000fd02-0000-1000-8000-00805f9b34fb
+RX      = 0000fd02-0001-1000-8000-00805f9b34fb
+TX      = 0000fd02-0002-1000-8000-00805f9b34fb
+
+1. subscribe(TX)
+2. send InfoRequest(0x00)
+3. ClearSlot(0)
+4. StartFileUpload("program.py", slot 0, CRC32)
+5. TransferChunk(...)
+6. DeviceNotificationRequest(500 ms)
+7. browser START -> ProgramFlow(Start, slot 0)
+8. browser STOP  -> ProgramFlow(Stop, slot 0)</pre></article>
+  </div><div class="download-row reveal"><a href="code/esp32_spike_bridge.ino" download>ESP32 전체 코드 다운로드</a><a class="alt" href="code/spike_delivery.py" download>SPIKE Python 다운로드</a><a class="alt" href="README.md" download>README 다운로드</a></div></div></section>
+
+  <section id="test"><div class="container"><div class="kicker reveal">FIRST RUN</div><h2 class="section-title reveal">바닥에 내려놓기 전에 공중에서 성공 여부를 확인하세요</h2><p class="section-desc reveal">처음 bring-up은 속도보다 관찰 가능성이 중요합니다. Serial Monitor와 Hub 동작을 동시에 보면서 아래 순서로 확인합니다.</p><div class="checklist">
+    <article class="check reveal"><b>CHECK 01</b><strong>Serial: SPIKE connected</strong><p>ESP32가 6초 스캔 안에 FD02 service를 찾고 GATT 연결을 완료해야 합니다.</p></article>
+    <article class="check reveal"><b>CHECK 02</b><strong>Handshake OK</strong><p>InfoResponse에서 max packet / chunk size를 읽으면 프로토콜 계층이 정상입니다.</p></article>
+    <article class="check reveal"><b>CHECK 03</b><strong>Program uploaded</strong><p>ClearSlot → StartFileUpload → TransferChunk의 ACK가 모두 도착해야 합니다.</p></article>
+    <article class="check reveal"><b>CHECK 04</b><strong>Wi‑Fi 접속</strong><p>휴대폰에서 <code>SPIKE-ESP32</code> / <code>spikeprime</code>로 접속하고 192.168.4.1을 엽니다.</p></article>
+    <article class="check reveal"><b>CHECK 05</b><strong>START → 장애물 회피</strong><p>바퀴를 공중에 띄운 상태에서 책을 센서 10~15 cm 앞에 대어 정지·후진·회전을 봅니다.</p></article>
+    <article class="check reveal"><b>CHECK 06</b><strong>STOP 확인</strong><p>웹 STOP을 눌렀을 때 Hub 프로그램이 즉시 종료되는지 확인한 후 바닥 테스트로 이동합니다.</p></article>
+  </div></div></section>
+
+  <section class="soft" id="risks"><div class="container"><div class="kicker reveal">TROUBLESHOOTING</div><h2 class="section-title reveal">문제가 생기면 BLE → 업로드 → 모터 → 센서 순서로 분리해서 봅니다</h2><p class="section-desc reveal">이 프로젝트에서 가장 어려운 부분은 로
