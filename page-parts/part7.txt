@@ -1,0 +1,52 @@
+봇이 아니라 BLE 프로토콜입니다. 공식 reference client와 동일한 메시지 순서를 유지하는 것이 핵심입니다.</p><div class="table-wrap reveal"><table class="table"><thead><tr><th>증상</th><th>가장 가능성 높은 원인</th><th>확인 방법</th><th>조치</th></tr></thead><tbody>
+    <tr><td>Hub가 검색되지 않음</td><td>SPIKE App이 이미 연결됨 / Bluetooth 대기 상태 아님</td><td>Serial에 FD02 장치가 없음</td><td>SPIKE App 종료, Hub 무선 기능 확인, 1~2m 거리에서 재부팅</td></tr>
+    <tr><td>연결되지만 Handshake 실패</td><td>TX notification 미구독 / framing 오류</td><td>InfoResponse(0x01)가 안 옴</td><td>TX subscribe 성공 여부와 COBS/XOR/0x02 delimiter 확인</td></tr>
+    <tr><td>Upload NACK</td><td>CRC32, chunk 크기, packet 분할 오류</td><td>0x0D 또는 0x11 status=1</td><td>InfoResponse의 max packet/chunk를 사용하고 4-byte CRC padding 확인</td></tr>
+    <tr><td>로봇이 뒤로 감</td><td>모터 방향/포트 순서가 반대</td><td>START 직후 방향 확인</td><td>A/B 모터를 바꾸거나 pair 순서/velocity 부호 수정</td></tr>
+    <tr><td>거리 값 -1</td><td>센서가 반사 대상을 못 찾음</td><td>손/책을 정면 가까이 대봄</td><td>센서를 수평·정면으로 재배치하고 장애물 재질/각도 변경</td></tr>
+  </tbody></table></div><div class="notice reveal"><strong>검증 상태:</strong> SPIKE Python API, BLE UUID, 메시지 형식, COBS/XOR framing, CRC32 정렬 규칙은 LEGO 공식 문서를 기준으로 작성했습니다. 제공한 ESP32 C++ 코드는 이 환경에서 실제 Hub와 bench test할 수 없었으므로 첫 실행에서 Serial 로그를 기준으로 하드웨어 검증이 필요합니다.</div></div></section>
+
+  <section id="expand"><div class="container"><div class="kicker reveal">NEXT LEVEL</div><h2 class="section-title reveal">첫 성공 이후에는 “로봇 + IoT” 프로젝트로 확장할 수 있습니다</h2><p class="section-desc reveal">SPIKE만으로는 어려운 네트워크 기능을 ESP32에 붙이면서도, 기구·모터 제어는 LEGO 생태계를 그대로 유지할 수 있습니다.</p><div class="two"><article class="card reveal"><h3>쉬운 확장</h3><div class="list"><div class="item"><b>1</b><div>웹에서 장애물 임계값 180 mm 변경</div></div><div class="item"><b>2</b><div>ESP32 OLED에 배터리·거리 표시</div></div><div class="item"><b>3</b><div>주행 횟수·정지 횟수 기록</div></div></div></article><article class="card good reveal"><h3>고급 확장</h3><div class="list"><div class="item"><b>1</b><div>ESP32-CAM으로 영상 스트리밍</div></div><div class="item"><b>2</b><div>MQTT로 Home Assistant / Node-RED 연동</div></div><div class="item"><b>3</b><div>웹 joystick 명령을 SPIKE runtime과 양방향 tunnel로 연결</div></div></div></article></div></div></section>
+</main>
+
+<footer class="sources" id="sources"><div class="container"><div class="kicker">SOURCES</div><h2 class="section-title">공식 프로토콜과 LEGO Education 예제를 기준으로 설계했습니다</h2><p class="section-desc">현재 SPIKE Prime 제품은 2026년 6월 30일 은퇴 상태지만 LEGO는 SPIKE App을 2031년 6월 30일까지 지원한다고 안내합니다. 따라서 기존 장비를 활용한 학습·개인 프로젝트는 계속 가능합니다.</p><div class="source-grid">
+  <a class="source" href="https://lego.github.io/spike-prime-docs/" target="_blank" rel="noopener noreferrer"><span>OFFICIAL PROTOCOL · 확인 2026-08-19</span><strong>LEGO SPIKE Prime Protocol 1.0</strong></a>
+  <a class="source" href="https://lego.github.io/spike-prime-docs/connect.html" target="_blank" rel="noopener noreferrer"><span>OFFICIAL PROTOCOL</span><strong>BLE GATT Service / RX / TX Connection</strong></a>
+  <a class="source" href="https://lego.github.io/spike-prime-docs/messages.html" target="_blank" rel="noopener noreferrer"><span>OFFICIAL PROTOCOL</span><strong>SPIKE Prime Message Types</strong></a>
+  <a class="source" href="https://github.com/LEGO/spike-prime-docs/tree/main/examples/python" target="_blank" rel="noopener noreferrer"><span>OFFICIAL REFERENCE CODE</span><strong>LEGO BLE Python Reference Client</strong></a>
+  <a class="source" href="https://education.lego.com/en-us/lessons/spike-python-u3-sensor-control/spike-python-u3l3/" target="_blank" rel="noopener noreferrer"><span>OFFICIAL LESSON</span><strong>Cart Control · Distance Sensor Python</strong></a>
+  <a class="source" href="https://education.lego.com/en-us/products/lego-education-spike-prime-set/45678/" target="_blank" rel="noopener noreferrer"><span>OFFICIAL PRODUCT</span><strong>SPIKE Prime lifecycle & support</strong></a>
+  <a class="source" href="https://github.com/h2zero/NimBLE-Arduino" target="_blank" rel="noopener noreferrer"><span>PRIMARY SOFTWARE</span><strong>NimBLE-Arduino</strong></a>
+  <a class="source" href="https://education.lego.com/en-us/product-resources/spike-prime/downloads/technical-specifications/" target="_blank" rel="noopener noreferrer"><span>OFFICIAL TECH SPECS</span><strong>Hub · Motor · Sensor specifications</strong></a>
+  <article class="source"><span>PROJECT BASIS</span><strong>AIHUBOS ReportMode design & QA files</strong></article>
+</div>
+<div class="history" id="history"><h2 style="font-size:26px;margin-bottom:14px">버전 및 업데이트 히스토리</h2><div class="table-wrap"><table class="table"><thead><tr><th>버전</th><th>업데이트일</th><th>변경 구분</th><th>주요 변경 내용</th><th>작성·검토</th></tr></thead><tbody id="historyBody"></tbody></table></div></div><div class="footer-note">LEGO®는 LEGO Group의 상표입니다. 본 프로젝트는 LEGO Group이 후원·승인한 공식 제품이 아닌 교육용 통합 예제입니다.</div></div></footer>
+
+<script id="report-metadata" type="application/json">{
+  "schemaVersion":"1.0",
+  "reportId":"260819-spike-esp32-smart-delivery-rover",
+  "title":"SPIKE Prime × ESP32 Smart Delivery Rover",
+  "version":"1.0.0",
+  "status":"Draft",
+  "createdAt":"2026-08-19",
+  "updatedAt":"2026-08-19",
+  "language":"ko-KR",
+  "author":"AIHUBOS ReportMode",
+  "generation":"AI-assisted",
+  "reviewStatus":"Hardware validation recommended",
+  "history":[{
+    "version":"1.0.0",
+    "date":"2026-08-19",
+    "type":"신규 작성",
+    "summary":"LEGO SPIKE Prime Driving Base와 ESP32를 공식 BLE 프로토콜로 연결하는 Smart Delivery Rover 프로젝트를 신규 구성하고, SPIKE Python·ESP32 BLE/Web 코드·단계별 테스트·문제 해결 가이드를 포함함.",
+    "sections":["전체"],
+    "updatedBy":"AI-assisted",
+    "reviewStatus":"하드웨어 검증 권장"
+  }]
+}</script>
+<script>
+const progress=document.getElementById('progress');function update(){const m=document.documentElement.scrollHeight-innerHeight;progress.style.width=(m>0?scrollY/m*100:0)+'%'}addEventListener('scroll',update,{passive:true});update();
+if('IntersectionObserver'in window){const ob=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');ob.unobserve(e.target)}}),{threshold:.08});document.querySelectorAll('.reveal').forEach(e=>ob.observe(e))}else document.querySelectorAll('.reveal').forEach(e=>e.classList.add('visible'));
+try{const m=JSON.parse(document.getElementById('report-metadata').textContent);document.getElementById('reportVersion').textContent='v'+m.version;document.getElementById('reportUpdated').textContent='Updated '+m.updatedAt.replaceAll('-','.');document.title=m.title+' · v'+m.version;const b=document.getElementById('historyBody');m.history.forEach(h=>{const tr=document.createElement('tr');[('v'+h.version),h.date.replaceAll('-','.'),h.type,h.summary,(h.updatedBy+' · '+h.reviewStatus)].forEach((v,i)=>{const td=document.createElement('td');if(i===4){const s=document.createElement('span');s.className='status';s.textContent=v;td.appendChild(s)}else td.textContent=v;tr.appendChild(td)});b.appendChild(tr)})}catch(e){console.error(e)}
+</script>
+</body></html>
